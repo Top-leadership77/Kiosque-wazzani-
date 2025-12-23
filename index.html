@@ -2,31 +2,62 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kiosque Wazzani - Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiosque Wazzani</title>
 <link rel="stylesheet" href="style.css">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
 </head>
 <body>
-<div class="login-container">
-  <h1>تسجيل الدخول</h1>
-  <input type="text" id="username" placeholder="اسم المستخدم">
-  <input type="password" id="password" placeholder="كلمة المرور">
-  <button onclick="login()">دخول</button>
-  <p id="login-msg"></p>
-</div>
+
+<header>
+  <h1>🔱 Kiosque Wazzani</h1>
+</header>
+
+<main>
+  <section id="login-section">
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="username" placeholder="اسم المستخدم">
+    <input type="password" id="password" placeholder="كلمة المرور">
+    <button id="loginBtn">دخول</button>
+    <p id="login-msg"></p>
+  </section>
+
+  <section id="dashboard-section" style="display:none;">
+    <h2>لوحة التحكم</h2>
+    <button id="scanBtn">فتح الكاميرا لمسح الباركود</button>
+    <div id="scanner"></div>
+
+    <h3>المنتجات</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>الباركود</th>
+          <th>السعر</th>
+        </tr>
+      </thead>
+      <tbody id="products-list"></tbody>
+    </table>
+
+    <h3>المبيعات</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>المنتج</th>
+          <th>الكمية</th>
+          <th>السعر الإجمالي</th>
+        </tr>
+      </thead>
+      <tbody id="sales-list"></tbody>
+    </table>
+  </section>
+</main>
 
 <script src="firebase-config.js"></script>
-<script>
-function login(){
-  const user=document.getElementById('username').value;
-  const pass=document.getElementById('password').value;
-  // تحقق بسيط بدون Firebase للتجربة
-  if(user==='admin' && pass==='1234'){
-    window.location.href='dashboard.html';
-  } else {
-    document.getElementById('login-msg').textContent='بيانات خاطئة';
-  }
-}
-</script>
+<script src="app.js"></script>
 </body>
 </html>
