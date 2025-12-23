@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kiosque Wazzani - Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>لوحة إدارة المنتجات</h1>
+
+<div class="product-form">
+  <input type="text" id="product-name" placeholder="اسم المنتج">
+  <input type="number" id="product-price" placeholder="السعر">
+  <button onclick="addProduct()">إضافة</button>
+</div>
+
+<div class="scanner">
+  <button onclick="startScan()">ابدأ مسح الباركود</button>
+  <p id="scan-result"></p>
+</div>
+
+<div class="product-list">
+  <h2>المنتجات المخزنة</h2>
+  <ul id="products"></ul>
+</div>
+
+<audio id="scan-sound" src="scan-sound.mp3"></audio>
+
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
