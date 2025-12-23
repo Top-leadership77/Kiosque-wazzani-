@@ -1,65 +1,55 @@
-// ===== Elements =====
-const scanBtn = document.getElementById('scanBtn');
-const productList = document.getElementById('productList');
-const totalDisplay = document.getElementById('total');
-const beepSound = new Audio('cashier-beep.mp3');
-
-let cart = [];
+let cart = {};
 let total = 0;
 
-// ===== Barcode Scanner =====
-scanBtn.addEventListener('click', () => {
-  Quagga.init({
-    inputStream: {
-      name: "Live",
-      type: "LiveStream",
-      target: document.querySelector('#scanner')
-    },
-    decoder: { readers: ["code_128_reader","ean_reader","ean_8_reader"] },
-  }, function(err) {
-    if (err) { console.log(err); return; }
-    Quagga.start();
-  });
-
-  Quagga.onDetected((data) => {
-    const code = data.codeResult.code;
-    Quagga.stop();
-    beepSound.play();
-    addProductByBarcode(code);
-  });
+// Scanner setup
+let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+scanner.addListener('scan', function(content) {
+  playBeep();
+  addToCart(content);
 });
 
-// ===== Add Product =====
-function addProductByBarcode(barcode) {
-  db.collection('products').doc(barcode).get()
-    .then(doc => {
-      if (doc.exists) {
-        const product = doc.data();
-        cart.push(product);
-        updateCartUI();
-        saveSale(product);
+Instascan.Camera.getCameras().then(function(cameras){
+  if(cameras.length > 0) { scanner.start(cameras[0]); }
+});
+
+// إضافة المنتج للسلع
+function addToCart(barcode) {
+  db.collection("products").doc(barcode).get().then(doc => {
+    if(doc.exists){
+      const data = doc.data();
+      if(cart[barcode]){
+        cart[barcode].qty++;
       } else {
-        alert('Produit non trouvé !');
+        cart[barcode] = { name:data.name, price:data.price, qty:1 };
       }
-    });
+      renderCart();
+    } else {
+      alert("Produit non trouvé !");
+    }
+  });
 }
 
-// ===== Update UI =====
-function updateCartUI() {
-  productList.innerHTML = '';
+// تحديث جدول الكاشير
+function renderCart() {
+  const tbody = document.querySelector("#cart-table tbody");
+  tbody.innerHTML = "";
   total = 0;
-  cart.forEach(p => {
-    productList.innerHTML += `<li>${p.name} - ${p.price} TND</li>`;
-    total += p.price;
-  });
-  totalDisplay.textContent = `Total: ${total.toFixed(2)} TND`;
+  for(let key in cart){
+    const item = cart[key];
+    const row = `<tr>
+      <td>${item.name}</td>
+      <td>${item.price.toFixed(2)}</td>
+      <td>${item.qty}</td>
+      <td>${(item.price*item.qty).toFixed(2)}</td>
+    </tr>`;
+    tbody.innerHTML += row;
+    total += item.price*item.qty;
+  }
+  document.getElementById('total').textContent = total.toFixed(2);
 }
 
-// ===== Save Sale =====
-function saveSale(product) {
-  db.collection('sales').add({
-    product: product.name,
-    price: product.price,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  });
+// صوت الكاشير
+function playBeep() {
+  const audio = new Audio('cashier-beep.mp3');
+  audio.play();
 }
