@@ -1,0 +1,9 @@
+body{font-family:sans-serif; background:#f4f4f4; padding:20px; text-align:center;}
+h1,h2{color:#0a3cff;}
+input{padding:10px; margin:5px; width:200px;}
+button{padding:10px 15px; background:#0a3cff; color:#fff; border:none; border-radius:5px; cursor:pointer;}
+button:hover{background:#0056b3;}
+ul{list-style:none; padding:0;}
+li{background:#fff; margin:5px; padding:10px; border-radius:5px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+.login-container{background:#fff; padding:40px; border-radius:10px; box-shadow:0 5px 20px rgba(0,0,0,0.1); max-width:300px; margin:100px auto;}
+.product-form, .scanner{margin:20px;}
